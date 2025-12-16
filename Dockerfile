@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.9.5-alpine
+FROM python:3.11.14-alpine
 
 # create directory for the app user
 RUN mkdir -p /home/app
@@ -13,7 +13,7 @@ WORKDIR $HOME
 
 # install dependencies
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install -U pip && pip install --no-cache-dir -r requirements.txt
 
 # copy project
 COPY . $HOME
