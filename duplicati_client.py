@@ -20,7 +20,7 @@ class Duplicati:
         r = requests.get(self.base_url, verify=self.verify, allow_redirects=True)
         r.raise_for_status() # Should probably add better error handling here
 
-        xsrf_token = urllib.parse.unquote(r.cookies["xsrf-token"])
+        xsrf_token = urllib.parse.unquote(r.cookies.get("xsrf-token", ""))
         if xsrf_token is None:
             raise Exception("Unable to get xsrf-token from cookies")
 
@@ -33,8 +33,9 @@ class Duplicati:
         self.login() # Doesn't hurt to call multiple times
 
         backup_list_url = build_url(self.base_url, "api/v1/backups")
-        cookies = {"xsrf-token": self.token}
-        headers = {"X-XSRF-TOKEN": self.token}
+        if self.token:
+            cookies = {"xsrf-token": self.token}
+            headers = {"X-XSRF-TOKEN": self.token}
 
         r = requests.get(backup_list_url, headers=headers, cookies=cookies, verify=self.verify)
         r.encoding='utf-8-sig'
