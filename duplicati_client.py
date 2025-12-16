@@ -36,6 +36,8 @@ class Duplicati:
         if self.token:
             cookies = {"xsrf-token": self.token}
             headers = {"X-XSRF-TOKEN": self.token}
+        else:
+            cookies, headers = {}, {}
 
         r = requests.get(backup_list_url, headers=headers, cookies=cookies, verify=self.verify)
         r.encoding='utf-8-sig'
